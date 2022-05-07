@@ -6,9 +6,9 @@
 ;--------------------------------
 ;Variables
 
-  !define PRODUCT_NAME "Qtum-Electrum"
-  !define PRODUCT_WEB_SITE "https://github.com/qtumproject/qtum-electrum"
-  !define PRODUCT_PUBLISHER "Qtum Team"
+  !define PRODUCT_NAME "Runebase-Electrum"
+  !define PRODUCT_WEB_SITE "https://github.com/runebase/runebase-electrum"
+  !define PRODUCT_PUBLISHER "Runebase Team"
   !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 
 ;--------------------------------
@@ -122,21 +122,21 @@ Section
 
   ;Create desktop shortcut
   DetailPrint "Creating desktop shortcut..."
-  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\Qtum-electrum-${PRODUCT_VERSION}.exe" ""
+  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\Runebase-electrum-${PRODUCT_VERSION}.exe" ""
 
   ;Create start-menu items
   DetailPrint "Creating start-menu items..."
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\Qtum-electrum-${PRODUCT_VERSION}.exe" "" "$INSTDIR\Qtum-electrum-${PRODUCT_VERSION}.exe" 0
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Testnet.lnk" "$INSTDIR\Qtum-electrum-${PRODUCT_VERSION}.exe" "--testnet" "$INSTDIR\Qtum-electrum-${PRODUCT_VERSION}.exe" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\Runebase-electrum-${PRODUCT_VERSION}.exe" "" "$INSTDIR\Runebase-electrum-${PRODUCT_VERSION}.exe" 0
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME} Testnet.lnk" "$INSTDIR\Runebase-electrum-${PRODUCT_VERSION}.exe" "--testnet" "$INSTDIR\Runebase-electrum-${PRODUCT_VERSION}.exe" 0
 
 
-  ;Links qtum: URI's to Electrum
-  WriteRegStr HKCU "Software\Classes\qtum" "" "URL:qtum Protocol"
-  WriteRegStr HKCU "Software\Classes\qtum" "URL Protocol" ""
-  WriteRegStr HKCU "Software\Classes\qtum" "DefaultIcon" "$\"$INSTDIR\electrum.ico, 0$\""
-  WriteRegStr HKCU "Software\Classes\qtum\shell\open\command" "" "$\"$INSTDIR\Qtum-electrum-${PRODUCT_VERSION}.exe$\" $\"%1$\""
+  ;Links runebase: URI's to Electrum
+  WriteRegStr HKCU "Software\Classes\runebase" "" "URL:runebase Protocol"
+  WriteRegStr HKCU "Software\Classes\runebase" "URL Protocol" ""
+  WriteRegStr HKCU "Software\Classes\runebase" "DefaultIcon" "$\"$INSTDIR\electrum.ico, 0$\""
+  WriteRegStr HKCU "Software\Classes\runebase\shell\open\command" "" "$\"$INSTDIR\Runebase-electrum-${PRODUCT_VERSION}.exe$\" $\"%1$\""
 
   ;Adds an uninstaller possibility to Windows Uninstall or change a program section
   WriteRegStr HKCU "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
@@ -167,7 +167,7 @@ Section "Uninstall"
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
   RMDir  "$SMPROGRAMS\${PRODUCT_NAME}"
   
-  DeleteRegKey HKCU "Software\Classes\qtum"
+  DeleteRegKey HKCU "Software\Classes\runebase"
   DeleteRegKey HKCU "Software\${PRODUCT_NAME}"
   DeleteRegKey HKCU "${PRODUCT_UNINST_KEY}"
 SectionEnd
