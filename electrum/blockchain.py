@@ -457,7 +457,7 @@ class Blockchain(Logger):
                 raise Exception(f"insufficient proof of work: {block_hash_as_num} vs target {target}")
 
         bits = cls.target_to_bits(target)
-        if bits != header.get('bits'):
+        if bits != header.get('bits') and header.get('block_height') > 5500:
             raise Exception(f"{header.get('block_height')} bits mismatch: {bits} vs {header.get('bits')}")
 
     def verify_chunk(self, index: int, raw_headers: list) -> None:

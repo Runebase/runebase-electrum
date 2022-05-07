@@ -1,50 +1,20 @@
 {
-  "s1.qtum.info": {
+  "electrum1.runebase.io": {
     "pruning": "-",
     "t": "50001",
     "s": "50002",
-    "version": "1.4"
+    "version": "1.5"
   },
-  "s3.qtum.info": {
+  "electrum2.runebase.io": {
     "pruning": "-",
     "t": "50001",
     "s": "50002",
-    "version": "1.4"
+    "version": "1.5"
   },
-  "s4.qtum.info": {
+  "electrum3.runebase.io": {
     "pruning": "-",
     "t": "50001",
     "s": "50002",
-    "version": "1.4"
-  },
-  "s5.qtum.info": {
-    "pruning": "-",
-    "t": "50001",
-    "s": "50002",
-    "version": "1.4"
-  },
-  "s7.qtum.info": {
-    "pruning": "-",
-    "t": "50001",
-    "s": "50002",
-    "version": "1.4"
-  },
-  "s8.qtum.info": {
-    "pruning": "-",
-    "t": "50001",
-    "s": "50002",
-    "version": "1.4"
-  },
-  "s9.qtum.info": {
-    "pruning": "-",
-    "t": "50001",
-    "s": "50002",
-    "version": "1.4"
-  },
-  "s10.qtum.info": {
-    "pruning": "-",
-    "t": "50001",
-    "s": "50002",
-    "version": "1.4"
+    "version": "1.5"
   }
 }

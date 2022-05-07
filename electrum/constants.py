@@ -69,19 +69,19 @@ class AbstractNet:
 class QtumMainnet(AbstractNet):
 
     TESTNET = False
-    WIF_PREFIX = 0x80
+    WIF_PREFIX = 0xd8
     BITCOIN_ADDRTYPE_P2PKH = 0
     BITCOIN_ADDRTYPE_P2SH = 5
-    ADDRTYPE_P2PKH = 0x3a
-    ADDRTYPE_P2SH = 0x32
-    SEGWIT_HRP = "qc"
-    GENESIS = "000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c"
+    ADDRTYPE_P2PKH = 0x3d
+    ADDRTYPE_P2SH = 0x7b
+    SEGWIT_HRP = "rc"
+    GENESIS = "0000208ee7a300f2baaf39f8524bf1bd6ed90db885d97b26e1a229f44ff73b9a"
     GENESIS_BITS = 0x1f00ffff
     DEFAULT_PORTS = {'t': '50001', 's': '50002'}
     DEFAULT_SERVERS = read_json('servers.json', {})
     CHECKPOINTS = read_json('checkpoints.json', {})
     BLOCK_HEIGHT_FIRST_LIGHTNING_CHANNELS = 0
-    HEADERS_URL = 'https://s.qtum.site/electrum_headers'
+    HEADERS_URL = 'https://downloads.runebase.io/aaaelectrum_headers2'
 
     POS_NO_RETARGET = False
 
@@ -90,10 +90,10 @@ class QtumMainnet(AbstractNet):
     QIP9_POS_LIMIT = 0x0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff
     RBT_POS_LIMIT = 0x0000000000003fffffffffffffffffffffffffffffffffffffffffffffffffff
 
-    QIP5_FORK_HEIGHT = 466600
-    QIP9_FORK_HEIGHT = 466600
-    OFFLINE_STAKE_HEIGHT = 680000
-    REDUCE_BLOCK_TIME_HEIGHT = 845000
+    QIP5_FORK_HEIGHT = 0
+    QIP9_FORK_HEIGHT = 0
+    OFFLINE_STAKE_HEIGHT = 99999999999 #upcoming fork
+    REDUCE_BLOCK_TIME_HEIGHT = 999999999 # upcoming fork
 
     LN_REALM_BYTE = 0
     LN_DNS_SEEDS = []
@@ -104,7 +104,7 @@ class QtumMainnet(AbstractNet):
     SLIP_COIN_TYPE = 2301
 
     XPRV_HEADERS = {
-        'standard': 0x0488ade4,
+        'standard': 0x0586dcf1,
         'p2wpkh-p2sh': 0x049d7878,
         'p2wsh-p2sh': 0x295b005,
         'p2wpkh': 0x4b2430c,
@@ -113,7 +113,7 @@ class QtumMainnet(AbstractNet):
     XPRV_HEADERS_INV = inv_dict(XPRV_HEADERS)
 
     XPUB_HEADERS = {
-        'standard': 0x0488b21e,
+        'standard': 0x0586c22e,
         'p2wpkh-p2sh': 0x049d7cb2,
         'p2wsh-p2sh': 0x295b43f,
         'p2wpkh': 0x4b24746,
@@ -125,13 +125,13 @@ class QtumMainnet(AbstractNet):
 class QtumTestnet(AbstractNet):
 
     TESTNET = True
-    WIF_PREFIX = 0xef
+    WIF_PREFIX = 0xca
     BITCOIN_ADDRTYPE_P2PKH = 111
     BITCOIN_ADDRTYPE_P2SH = 196
-    ADDRTYPE_P2PKH = 120
-    ADDRTYPE_P2SH = 110
-    SEGWIT_HRP = "tq"
-    GENESIS = "0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222"
+    ADDRTYPE_P2PKH = 106
+    ADDRTYPE_P2SH = 229
+    SEGWIT_HRP = "rcrt"
+    GENESIS = "0000019d9d91d1c7fd440938747eed3ca13a2d2c0533054115f147ab0da69d46"
     GENESIS_BITS = 0x1f00ffff
     DEFAULT_PORTS = {'t': '51001', 's': '51002'}
     DEFAULT_SERVERS = read_json('servers_testnet.json', {})
@@ -147,16 +147,16 @@ class QtumTestnet(AbstractNet):
     QIP9_POS_LIMIT = 0x0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff
     RBT_POS_LIMIT = 0x0000000000003fffffffffffffffffffffffffffffffffffffffffffffffffff
 
-    QIP5_FORK_HEIGHT = 446320
-    QIP9_FORK_HEIGHT = 446320
-    OFFLINE_STAKE_HEIGHT = 625000
-    REDUCE_BLOCK_TIME_HEIGHT = 806600
+    QIP5_FORK_HEIGHT = 0
+    QIP9_FORK_HEIGHT = 0
+    OFFLINE_STAKE_HEIGHT = 999999999999999 # upcoming fork
+    REDUCE_BLOCK_TIME_HEIGHT = 999999999999999 # upcoming fork
 
     LN_REALM_BYTE = 0
     LN_DNS_SEEDS = []
 
     XPRV_HEADERS = {
-        'standard': 0x04358394,
+        'standard': 0x053784a4,
         'p2wpkh-p2sh': 0x044a4e28,
         'p2wsh-p2sh': 0x024285b5,
         'p2wpkh': 0x045f18bc,
@@ -165,7 +165,7 @@ class QtumTestnet(AbstractNet):
     XPRV_HEADERS_INV = inv_dict(XPRV_HEADERS)
 
     XPUB_HEADERS = {
-        'standard': 0x043587cf,
+        'standard': 0x053782bf,
         'p2wpkh-p2sh': 0x044a5262,
         'p2wsh-p2sh': 0x024289ef,
         'p2wpkh': 0x045f1cf6,
@@ -176,8 +176,8 @@ class QtumTestnet(AbstractNet):
 
 class QtumRegtest(QtumTestnet):
 
-    SEGWIT_HRP = "qcrt"
-    GENESIS = "665ed5b402ac0b44efc37d8926332994363e8a7278b7ee9a58fb972efadae943"
+    SEGWIT_HRP = "rcrt"
+    GENESIS = "7bf779b04828d0fd6de63c64c1de4980eb16afe40aa0dd7e0f865edf92438e69"
     DEFAULT_SERVERS = read_json('servers_regtest.json', {})
     CHECKPOINTS = {}
     HEADERS_URL = None
