@@ -704,7 +704,7 @@ class Blockchain(Logger):
 
     def get_target(self, height: int, is_pos: bool, prev_header=None, pprev_header=None) -> int:
         """
-        https://github.com/runebaseproject/runebase/blob/master/src/pow.cpp CalculateNextWorkRequired
+        https://github.com/runebase/runebase/blob/master/src/pow.cpp CalculateNextWorkRequired
         """
         net = constants.net
 

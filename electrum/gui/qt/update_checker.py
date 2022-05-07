@@ -20,8 +20,8 @@ from electrum.network import Network
 
 
 class UpdateCheck(QDialog, Logger):
-    url = "https://api.github.com/repos/runebaseproject/runebase-electrum/releases/latest"
-    download_url = "https://github.com/runebaseproject/runebase-electrum/releases/latest"
+    url = "https://api.github.com/repos/runebase/runebase-electrum/releases/latest"
+    download_url = "https://github.com/runebase/runebase-electrum/releases/latest"
 
     def __init__(self, *, latest_version=None):
         QDialog.__init__(self)
