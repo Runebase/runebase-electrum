@@ -5,11 +5,11 @@ ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
 RUN dpkg --add-architecture i386 && \
     apt-get update -q && \
     apt-get install -qy \
-        wget=1.20.3-1ubuntu1 \
-        gnupg2=2.2.19-3ubuntu2.1 \
-        dirmngr=2.2.19-3ubuntu2.1 \
-        python3-software-properties=0.98.9.2 \
-        software-properties-common=0.98.9.2 \
+        wget \
+        gnupg2 \
+        dirmngr \
+        python3-software-properties \
+        software-properties-common \
         && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove -y && \
@@ -17,7 +17,7 @@ RUN dpkg --add-architecture i386 && \
 
 RUN apt-get update -q && \
         apt-get install -qy \
-        git=1:2.17.1-1ubuntu0.7 \
+        git \
         p7zip-full=16.02+dfsg-6 \
         make=4.1-9.1ubuntu1 \
         mingw-w64=5.0.3-1 \
@@ -40,10 +40,10 @@ RUN wget -nc https://dl.winehq.org/wine-builds/Release.key && \
     apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/ && \
     apt-get update -q && \
     apt-get install -qy \
-        wine-stable-amd64:amd64=6.0.0~focal-1 \
-        wine-stable-i386:i386=6.0.0~focal-1 \
-        wine-stable:amd64=6.0.0~focal-1 \
-        winehq-stable:amd64=6.0.0~focal-1 \
+        wine-stable-amd64:amd64 \
+        wine-stable-i386:i386 \
+        wine-stable:amd64 \
+        winehq-stable:amd64 \
         && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove -y && \
