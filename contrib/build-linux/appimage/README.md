@@ -6,33 +6,53 @@ AppImage binary for Electrum
 
 This assumes an Ubuntu host, but it should not be too hard to adapt to another
 similar system. The host architecture should be x86_64 (amd64).
+The docker commands should be executed in the project's root folder.
 
 We currently only build a single AppImage, for x86_64 architecture.
 Help to adapt these scripts to build for (some flavor of) ARM would be welcome,
 see [issue #5159](https://github.com/spesmilo/electrum/issues/5159).
 
+0. clone code without `--recursive`
+    
+    ```
+    $ git clone https://github.com/runebaseproject/runebase-electrum.git 
+    ```
 
 1. Install Docker
 
-    See `contrib/docker_notes.md`.
-
-2. Build binary
-
     ```
-    $ ./build.sh
-    ```
-    If you want reproducibility, try instead e.g.:
-    ```
-    $ ELECBUILD_COMMIT=HEAD ELECBUILD_NOCACHE=1 ./build.sh
+    $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    $ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    $ sudo apt-get update
+    $ sudo apt-get install -y docker-ce
     ```
 
-3. The generated binary is in `./dist`.
+2. Build image
+
+    ```
+    $ cd runebase-electrum
+    $ sudo docker build -t runebase-electrum-appimage-builder-img contrib/build-linux/appimage
+    ```
+
+3. Build binary
+
+    ```
+    $ sudo docker run -it \
+        --name runebase-electrum-appimage-builder-cont \
+        -v $PWD:/opt/electrum \
+        --rm \
+        --workdir /opt/electrum/contrib/build-linux/appimage \
+        runebase-electrum-appimage-builder-img \
+        ./build.sh
+    ```
+
+4. The generated binary is in `./dist`.
 
 
 ## FAQ
 
 ### How can I see what is included in the AppImage?
-Execute the binary as follows: `./electrum*.AppImage --appimage-extract`
+Execute the binary as follows: `./Runebase-electrum*.AppImage --appimage-extract`
 
 ### How to investigate diff between binaries if reproducibility fails?
 ```

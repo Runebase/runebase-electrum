@@ -10,6 +10,8 @@ for i, x in enumerate(sys.argv):
 else:
     raise Exception('no name')
 
+PYHOME = 'c:/python3'
+
 home = 'C:\\electrum\\'
 
 # see https://github.com/pyinstaller/pyinstaller/issues/2005
@@ -38,7 +40,6 @@ datas = [
     (home+'electrum/*.json', 'electrum'),
     (home+'electrum/lnwire/*.csv', 'electrum/lnwire'),
     (home+'electrum/wordlist/english.txt', 'electrum/wordlist'),
-    (home+'electrum/wordlist/slip39.txt', 'electrum/wordlist'),
     (home+'electrum/locale', 'electrum/locale'),
     (home+'electrum/plugins', 'electrum/plugins'),
     (home+'electrum/gui/icons', 'electrum/gui/icons'),
@@ -53,7 +54,6 @@ datas += collect_data_files('bitbox02')
 # We don't put these files in to actually include them in the script but to make the Analysis method scan them for imports
 a = Analysis([home+'run_electrum',
               home+'electrum/gui/qt/main_window.py',
-              home+'electrum/gui/qt/qrreader/qtmultimedia/camera_dialog.py',
               home+'electrum/gui/text.py',
               home+'electrum/util.py',
               home+'electrum/wallet.py',
@@ -94,21 +94,13 @@ for x in a.binaries.copy():
             a.binaries.remove(x)
             print('----> Removed x =', x)
 
-qt_data2remove=(r'pyqt5\qt\translations\qtwebengine_locales',)
+qt_data2remove=(r'pyqt5\qt\translations\qtwebengine_locales', )
 print("Removing Qt datas:", *qt_data2remove)
 for x in a.datas.copy():
     for r in qt_data2remove:
         if x[0].lower().startswith(r):
             a.datas.remove(x)
             print('----> Removed x =', x)
-
-# not reproducible (see #7739):
-print("Removing *.dist-info/ from datas:")
-for x in a.datas.copy():
-    if ".dist-info\\" in x[0].lower():
-        a.datas.remove(x)
-        print('----> Removed x =', x)
-
 
 # hotfix for #3171 (pre-Win10 binaries)
 a.binaries = [x for x in a.binaries if not x[1].lower().startswith(r'c:\windows')]
@@ -136,7 +128,7 @@ exe_portable = EXE(
     pyz,
     a.scripts,
     a.binaries,
-    a.datas + [('is_portable', 'README.md', 'DATA')],
+    a.datas + [ ('is_portable', 'README.md', 'DATA' ) ],
     name=os.path.join('build\\pyi.win32\\electrum', cmdline_name + "-portable.exe"),
     debug=False,
     strip=None,
