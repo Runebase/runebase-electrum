@@ -42,7 +42,7 @@ folder.
         sudo rm -rf $FRESH_CLONE && \
         mkdir -p $FRESH_CLONE && \
         cd $FRESH_CLONE  && \
-        git clone https://github.com/runebaseproject/runebase-electrum.git && \
+        git clone https://github.com/runebase/runebase-electrum.git && \
         cd runebase-electrum
     ```
 
