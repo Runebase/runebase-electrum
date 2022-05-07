@@ -45,15 +45,15 @@ except ImportError as e:
 
 if BTCHIP:
     try:
-        from btchip import QTUM_OPSENDER_SUPPORT
+        from btchip import RUNES_OPSENDER_SUPPORT
     except ImportError:
-        raise Exception("Please uninstall btchip-python and install btchip-qtum OR use a clean virtualenv")
+        raise Exception("Please uninstall btchip-python and install btchip-runebase OR use a clean virtualenv")
 
 MSG_NEEDS_FW_UPDATE_GENERIC = _('Firmware version too old. Please update at') + \
                       ' https://www.ledgerwallet.com'
-MSG_NEEDS_FW_UPDATE_SEGWIT = _('Firmware version (or "Qtum" app) too old for Segwit support. Please update at') + \
+MSG_NEEDS_FW_UPDATE_SEGWIT = _('Firmware version (or "Runebase" app) too old for Segwit support. Please update at') + \
                       ' https://www.ledgerwallet.com'
-MSG_NEEDS_FW_UPDATE_OPSENDER = _('Firmware version (or "Qtum" app) too old for OpSender support. Please update at') + \
+MSG_NEEDS_FW_UPDATE_OPSENDER = _('Firmware version (or "Runebase" app) too old for OpSender support. Please update at') + \
                       ' https://www.ledgerwallet.com'
 MULTI_OUTPUT_SUPPORT = '1.1.4'
 SEGWIT_SUPPORT = '1.1.10'
@@ -243,7 +243,7 @@ class Ledger_Client(HardwareClientBase):
                 self.perform_hw1_preflight()
             except BTChipException as e:
                 if (e.sw == 0x6d00 or e.sw == 0x6700):
-                    raise UserFacingException(_("Device not in Qtum mode")) from e
+                    raise UserFacingException(_("Device not in Runebase mode")) from e
                 raise e
             self.preflightDone = True
 
@@ -512,7 +512,7 @@ class Ledger_KeyStore(Hardware_KeyStore):
                 rawTx = tx.serialize_to_network()
                 client_ledger.enableAlternate2fa(False)
                 client_ledger.startUntrustedTransaction(True, inputIndex, chipInputs, redeemScripts[inputIndex],
-                                                        version=tx.version, qtumOpSender=True)
+                                                        version=tx.version, runebaseOpSender=True)
 
                 # Send all outputs
                 outputData = client_ledger.finalizeInput(b'', 0, 0, changePath, bfh(rawTx))

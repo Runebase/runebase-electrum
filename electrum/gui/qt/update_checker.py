@@ -20,12 +20,12 @@ from electrum.network import Network
 
 
 class UpdateCheck(QDialog, Logger):
-    url = "https://api.github.com/repos/qtumproject/qtum-electrum/releases/latest"
-    download_url = "https://github.com/qtumproject/qtum-electrum/releases/latest"
+    url = "https://api.github.com/repos/runebaseproject/runebase-electrum/releases/latest"
+    download_url = "https://github.com/runebaseproject/runebase-electrum/releases/latest"
 
     def __init__(self, *, latest_version=None):
         QDialog.__init__(self)
-        self.setWindowTitle('Qtum Electrum - ' + _('Update Check'))
+        self.setWindowTitle('Runebase Electrum - ' + _('Update Check'))
         self.content = QVBoxLayout()
         self.content.setContentsMargins(*[10] * 4)
 

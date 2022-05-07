@@ -170,7 +170,7 @@ class RequestList(MyTreeView):
             else:
                 assert isinstance(req, OnchainInvoice)
                 key = req.get_address()
-                icon = read_QIcon("qtum.png")
+                icon = read_QIcon("runebase.png")
                 tooltip = 'onchain request'
             items = [QStandardItem(e) for e in labels]
             self.set_editability(items)
@@ -218,8 +218,8 @@ class RequestList(MyTreeView):
             menu.addAction(_("Copy Request"), lambda: self.parent.do_copy(req.invoice, title='Lightning Request'))
         else:
             URI = self.wallet.get_request_URI(req)
-            menu.addAction(_("Copy Request"), lambda: self.parent.do_copy(URI, title='Qtum URI'))
-            menu.addAction(_("Copy Address"), lambda: self.parent.do_copy(req.get_address(), title='Qtum Address'))
+            menu.addAction(_("Copy Request"), lambda: self.parent.do_copy(URI, title='Runebase URI'))
+            menu.addAction(_("Copy Address"), lambda: self.parent.do_copy(req.get_address(), title='Runebase Address'))
         #if 'view_url' in req:
         #    menu.addAction(_("View in web browser"), lambda: webopen(req['view_url']))
         menu.addAction(_("Delete"), lambda: self.parent.delete_requests([key]))

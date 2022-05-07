@@ -182,7 +182,7 @@ Use this if you want your local watchtower to keep running after you close your 
         # units
         units = base_units_list
         msg = (_('Base unit of your wallet.')
-               + '\n1 QTUM = 1000 mQTUM. 1 mQTUM = 1000 bits. 1 bit = 100 sat.\n'
+               + '\n1 RUNES = 1000 mRUNES. 1 mRUNES = 1000 bits. 1 bit = 100 sat.\n'
                + _('This setting affects the Send tab, and all balance related fields.'))
         unit_label = HelpLabel(_('Base unit') + ':', msg)
         unit_combo = QComboBox()

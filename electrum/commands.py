@@ -1215,8 +1215,8 @@ def eval_bool(x: str) -> bool:
 
 param_descriptions = {
     'privkey': 'Private key. Type \'?\' to get a prompt.',
-    'destination': 'Qtum address, contact or alias',
-    'address': 'Qtum address',
+    'destination': 'Runebase address, contact or alias',
+    'address': 'Runebase address',
     'seed': 'Seed phrase',
     'txid': 'Transaction ID',
     'pos': 'Position',
@@ -1226,8 +1226,8 @@ param_descriptions = {
     'pubkey': 'Public key',
     'message': 'Clear text message. Use quotes if it contains spaces.',
     'encrypted': 'Encrypted message',
-    'amount': 'Amount to be sent (in QTUM). Type \'!\' to send the maximum available.',
-    'requested_amount': 'Requested amount (in QTUM).',
+    'amount': 'Amount to be sent (in RUNES). Type \'!\' to send the maximum available.',
+    'requested_amount': 'Requested amount (in RUNES).',
     'outputs': 'list of ["address", amount]',
     'redeem_script': 'redeem script (hexadecimal)',
     'lightning_amount': "Amount sent or received in a submarine swap. Set it to 'dryrun' to receive a value",
@@ -1247,7 +1247,7 @@ command_options = {
     'labels':      ("-l", "Show the labels of listed addresses"),
     'nocheck':     (None, "Do not verify aliases"),
     'imax':        (None, "Maximum number of inputs"),
-    'fee':         ("-f", "Transaction fee (absolute, in QTUM)"),
+    'fee':         ("-f", "Transaction fee (absolute, in RUNES)"),
     'feerate':     (None, "Transaction fee rate (in sat/byte)"),
     'from_addr':   ("-F", "Source address (must be a wallet address; use sweep to spend from non-wallet address)."),
     'from_coins':  (None, "Source coins (must be in wallet; use sweep to spend from non-wallet address)."),
@@ -1268,7 +1268,7 @@ command_options = {
     'timeout':     (None, "Timeout in seconds"),
     'force':       (None, "Create new address beyond gap limit, if no more addresses are available."),
     'pending':     (None, "Show only pending requests."),
-    'push_amount': (None, 'Push initial amount (in QTUM)'),
+    'push_amount': (None, 'Push initial amount (in RUNES)'),
     'expired':     (None, "Show only expired requests."),
     'paid':        (None, "Show only paid requests."),
     'show_addresses': (None, "Show input and output addresses"),
@@ -1317,10 +1317,10 @@ config_variables = {
     'addrequest': {
         'ssl_privkey': 'Path to your SSL private key, needed to sign the request.',
         'ssl_chain': 'Chain of SSL certificates, needed for signed requests. Put your certificate at the top and the root CA at the end',
-        'url_rewrite': 'Parameters passed to str.replace(), in order to create the r= part of qtum: URIs. Example: \"(\'file:///var/www/\',\'https://electrum.org/\')\"',
+        'url_rewrite': 'Parameters passed to str.replace(), in order to create the r= part of runebase: URIs. Example: \"(\'file:///var/www/\',\'https://electrum.org/\')\"',
     },
     'listrequests':{
-        'url_rewrite': 'Parameters passed to str.replace(), in order to create the r= part of qtum: URIs. Example: \"(\'file:///var/www/\',\'https://electrum.org/\')\"',
+        'url_rewrite': 'Parameters passed to str.replace(), in order to create the r= part of runebase: URIs. Example: \"(\'file:///var/www/\',\'https://electrum.org/\')\"',
     }
 }
 
@@ -1409,7 +1409,7 @@ def get_parser():
     subparsers = parser.add_subparsers(dest='cmd', metavar='<command>')
     # gui
     parser_gui = subparsers.add_parser('gui', description="Run Electrum's Graphical User Interface.", help="Run GUI (default)")
-    parser_gui.add_argument("url", nargs='?', default=None, help="Qtum URI (or bip70 file)")
+    parser_gui.add_argument("url", nargs='?', default=None, help="Runebase URI (or bip70 file)")
     parser_gui.add_argument("-g", "--gui", dest="gui", help="select graphical user interface", choices=['qt', 'kivy', 'text', 'stdio'])
     parser_gui.add_argument("-m", action="store_true", dest="hide_gui", default=False, help="hide GUI on startup")
     parser_gui.add_argument("-L", "--lang", dest="language", default=None, help="default language used in GUI")

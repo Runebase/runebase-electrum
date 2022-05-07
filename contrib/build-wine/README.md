@@ -9,9 +9,9 @@ similar system. The docker commands should be executed in the project's root
 folder.
 
 0. clone code without `--recursive`
-    
+
     ```
-    $ git clone https://github.com/qtumproject/qtum-electrum.git 
+    $ git clone https://github.com/runebase/runebase-electrum.git
     ```
 
 1. Install Docker
@@ -26,8 +26,8 @@ folder.
 2. Build image
 
     ```
-    $ cd qtum-electrum
-    $ sudo docker build -t qtum-electrum-wine-builder-img contrib/build-wine
+    $ cd runebase-electrum
+    $ sudo docker build -t runebase-electrum-wine-builder-img contrib/build-wine
     ```
 
     Note: see [this](https://stackoverflow.com/a/40516974/7499128) if having dns problems
@@ -42,19 +42,19 @@ folder.
         sudo rm -rf $FRESH_CLONE && \
         mkdir -p $FRESH_CLONE && \
         cd $FRESH_CLONE  && \
-        git clone https://github.com/qtumproject/qtum-electrum.git && \
-        cd qtum-electrum
+        git clone https://github.com/runebaseproject/runebase-electrum.git && \
+        cd runebase-electrum
     ```
 
     And then build from this directory:
     ```
     $ git checkout $REV
     $ sudo docker run -it \
-        --name qtum-electrum-wine-builder-cont \
+        --name runebase-electrum-wine-builder-cont \
         -v $PWD:/opt/wine64/drive_c/electrum \
         --rm \
         --workdir /opt/wine64/drive_c/electrum/contrib/build-wine \
-        qtum-electrum-wine-builder-img \
+        runebase-electrum-wine-builder-img \
         ./build.sh
     ```
 4. The generated binaries are in `./contrib/build-wine/dist`.
@@ -67,7 +67,7 @@ Code Signing
 Electrum Windows builds are signed with a Microsoft Authenticode™ code signing
 certificate in addition to the GPG-based signatures.
 
-The advantage of using Authenticode is that Electrum users won't receive a 
+The advantage of using Authenticode is that Electrum users won't receive a
 Windows SmartScreen warning when starting it.
 
 The release signing procedure involves a signer (the holder of the
@@ -92,7 +92,7 @@ certificate/key) and one or multiple trusted verifiers:
 Verify Integrity of signed binary
 =================================
 
-Every user can verify that the official binary was created from the source code in this 
+Every user can verify that the official binary was created from the source code in this
 repository. To do so, the Authenticode signature needs to be stripped since the signature
 is not reproducible.
 
