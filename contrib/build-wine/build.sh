@@ -23,7 +23,7 @@ fi
 info "building docker image."
 docker build \
     $DOCKER_BUILD_FLAGS \
-    -t electrum-wine-builder-img \
+    -t electrum-wine-builder-image-two \
     "$CONTRIB_WINE"
 
 # maybe do fresh clone
@@ -46,7 +46,7 @@ docker run -it \
     -v "$PROJECT_ROOT_OR_FRESHCLONE_ROOT":/opt/wine64/drive_c/electrum \
     --rm \
     --workdir /opt/wine64/drive_c/electrum/contrib/build-wine \
-    electrum-wine-builder-img \
+    electrum-wine-builder-image-two \
     ./make_win.sh
 
 # make sure resulting binary location is independent of fresh_clone

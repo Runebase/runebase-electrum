@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Please update these carefully, some versions won't work under Wine
-NSIS_FILENAME=nsis-3.05-setup.exe
-NSIS_URL=https://downloads.sourceforge.net/project/nsis/NSIS%203/3.05/$NSIS_FILENAME
-NSIS_SHA256=1a3cc9401667547b9b9327a177b13485f7c59c2303d4b6183e7bc9e6c8d6bfdb
+NSIS_FILENAME=nsis-3.08-setup.exe
+NSIS_URL=https://downloads.sourceforge.net/project/nsis/NSIS%203/3.08/$NSIS_FILENAME
+NSIS_SHA256=bbc76be36ecb2fc00d493c91befdaf71654226ad8a4fc4dc338458916bf224d0
 
 LIBUSB_REPO="https://github.com/libusb/libusb.git"
 LIBUSB_COMMIT="c6a35c56016ea2ab2f19115d2ea1e85e0edae155"
 # ^ tag v1.0.24
 
 PYINSTALLER_REPO="https://github.com/SomberNight/pyinstaller.git"
-PYINSTALLER_COMMIT="6e455b2c1208465742484436009bfb1e1baf2e01"
+PYINSTALLER_COMMIT="0fe956a2c6157e1b276819de1a050c242de70a29"
 # ^ tag 4.1, plus a custom commit that fixes cross-compilation with MinGW
 
 PYTHON_VERSION=3.7.9
@@ -108,6 +108,10 @@ info "Building PyInstaller."
 # we build our own PyInstaller boot loader as the default one has high
 # anti-virus false positives
 (
+    if [ -f "$CACHEDIR/pyinstaller/PyInstaller/bootloader/Windows-64bit/runw.exe" ]; then
+        info "pyinstaller already built, skipping"
+        exit 0
+    fi
     cd "$WINEPREFIX/drive_c/electrum"
     ELECTRUM_COMMIT_HASH=$(git rev-parse HEAD)
     cd "$CACHEDIR"
@@ -126,22 +130,12 @@ info "Building PyInstaller."
     pushd bootloader
     # cross-compile to Windows using host python
     python3 ./waf all CC="${GCC_TRIPLET_HOST}-gcc" \
-                      CFLAGS="-static \
-                              -Wno-dangling-else \
-                              -Wno-error=unused-value \
-                              -Wno-error=implicit-function-declaration \
-                              -Wno-error=int-to-pointer-cast"
+                      CFLAGS="-static"
     popd
     # sanity check bootloader is there:
-    if [ "$GCC_TRIPLET_HOST" = "i686-w64-mingw32" ] ; then
-        [[ -e PyInstaller/bootloader/Windows-32bit/runw.exe ]] || fail "Could not find runw.exe in target dir! (32bit)"
-    elif [ "$GCC_TRIPLET_HOST" = "x86_64-w64-mingw32" ] ; then
-        [[ -e PyInstaller/bootloader/Windows-64bit/runw.exe ]] || fail "Could not find runw.exe in target dir! (64bit)"
-    else
-        fail "unexpected GCC_TRIPLET_HOST: $GCC_TRIPLET_HOST"
-    fi
+    [[ -e "PyInstaller/bootloader/Windows-64bit/runw.exe" ]] || fail "Could not find runw.exe in target dir!"
 ) || fail "PyInstaller build failed"
 info "Installing PyInstaller."
-$PYTHON -m pip install --no-dependencies --no-warn-script-location ./pyinstaller
+$WINE_PYTHON -m pip install --no-build-isolation --no-dependencies --no-warn-script-location ./pyinstaller
 
 info "Wine is configured."
