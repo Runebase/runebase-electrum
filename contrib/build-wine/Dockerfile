@@ -8,8 +8,8 @@ RUN dpkg --add-architecture i386 && \
         wget \
         gnupg2 \
         dirmngr \
-        python3-software-properties \
-        software-properties-common \
+        python3-software-properties=0.96.24.32.1 \
+        software-properties-common=0.96.24.32.1\
         && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove -y && \
@@ -40,10 +40,10 @@ RUN wget -nc https://dl.winehq.org/wine-builds/Release.key && \
     apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/ && \
     apt-get update -q && \
     apt-get install -qy \
-        wine-stable-amd64:amd64 \
-        wine-stable-i386:i386 \
-        wine-stable:amd64 \
-        winehq-stable:amd64 \
+        wine-stable-amd64:amd64=4.0.3~bionic \
+        wine-stable-i386:i386=4.0.3~bionic \
+        wine-stable:amd64=4.0.3~bionic \
+        winehq-stable:amd64=4.0.3~bionic \
         && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove -y && \
