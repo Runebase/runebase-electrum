@@ -807,12 +807,12 @@ def time_difference(distance_in_time, include_seconds):
         return "over %d years" % (round(distance_in_minutes / 525600))
 
 mainnet_block_explorers = {
-    'runebase.info': ('https://runebase.info/',
+    'explorer.runebase.io': ('https://explorer.runebase.io/',
                   {'tx': 'tx/', 'addr': 'address/', 'contract': 'contract/'}),
 }
 
 testnet_block_explorers = {
-    'runebase.info': ('https://testnet.runebase.info/',
+    'testnet.runebase.io': ('https://testnet.runebase.io/',
                   {'tx': 'tx/', 'addr': 'address/', 'contract': 'contract/'}),
 }
 
@@ -821,7 +821,7 @@ def block_explorer_info():
     return mainnet_block_explorers if not constants.net.TESTNET else testnet_block_explorers
 
 def block_explorer(config: 'SimpleConfig') -> str:
-    default_ = 'runebase.info'
+    default_ = 'explorer.runebase.io'
     be_key = config.get('block_explorer', default_)
     be = block_explorer_info().get(be_key)
     return be_key if be is not None else default_
@@ -840,7 +840,7 @@ def block_explorer_URL(config: 'SimpleConfig', **params) -> Optional[str]:
     if token:
         if 'runebase.org' in be_tuple[0]:
             return "{}/token/{}?a={}".format(be_tuple[0], token, addr)
-        if 'runebase.info' in be_tuple[0]:
+        if 'explorer.runebase.io' in be_tuple[0]:
             return "{}address/{}/token-balance?token={}".format(be_tuple[0], addr, token)
 
     url_parts = [be_tuple[0], ]
