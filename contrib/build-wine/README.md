@@ -9,9 +9,9 @@ similar system. The docker commands should be executed in the project's root
 folder.
 
 0. clone code without `--recursive`
-
+    
     ```
-    $ git clone https://github.com/runebase/runebase-electrum.git
+    $ git clone https://github.com/runebase/runebase-electrum.git 
     ```
 
 1. Install Docker
@@ -67,7 +67,7 @@ Code Signing
 Electrum Windows builds are signed with a Microsoft Authenticode™ code signing
 certificate in addition to the GPG-based signatures.
 
-The advantage of using Authenticode is that Electrum users won't receive a
+The advantage of using Authenticode is that Electrum users won't receive a 
 Windows SmartScreen warning when starting it.
 
 The release signing procedure involves a signer (the holder of the
@@ -92,7 +92,7 @@ certificate/key) and one or multiple trusted verifiers:
 Verify Integrity of signed binary
 =================================
 
-Every user can verify that the official binary was created from the source code in this
+Every user can verify that the official binary was created from the source code in this 
 repository. To do so, the Authenticode signature needs to be stripped since the signature
 is not reproducible.
 
