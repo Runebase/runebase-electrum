@@ -92,7 +92,7 @@ class RunebaseMainnet(AbstractNet):
 
     QIP5_FORK_HEIGHT = 0
     QIP9_FORK_HEIGHT = 0
-    OFFLINE_STAKE_HEIGHT = 99999999999 #upcoming fork
+    OFFLINE_STAKE_HEIGHT = 900000 #upcoming fork
     REDUCE_BLOCK_TIME_HEIGHT = 999999999 # upcoming fork
 
     LN_REALM_BYTE = 0
@@ -149,7 +149,7 @@ class RunebaseTestnet(AbstractNet):
 
     QIP5_FORK_HEIGHT = 0
     QIP9_FORK_HEIGHT = 0
-    OFFLINE_STAKE_HEIGHT = 999999999999999 # upcoming fork
+    OFFLINE_STAKE_HEIGHT = 10000 # upcoming fork
     REDUCE_BLOCK_TIME_HEIGHT = 999999999999999 # upcoming fork
 
     LN_REALM_BYTE = 0
