@@ -233,7 +233,7 @@ class TrezorClientBase(HardwareClientBase, Logger):
                 multisig=multisig)
 
     @runs_in_hwd_thread
-    def sign_message(self, address_str, message):
+    def sign_message(self, address_str, message, *, script_type):
         coin_name = self.plugin.get_coin_name()
         address_n = parse_path(address_str)
         with self.run_flow():
@@ -241,7 +241,10 @@ class TrezorClientBase(HardwareClientBase, Logger):
                 self.client,
                 coin_name,
                 address_n,
-                message)
+                message,
+                script_type=script_type,
+                no_script_type=True
+            )
 
     @runs_in_hwd_thread
     def recover_device(self, recovery_type, *args, **kwargs):
@@ -273,8 +276,8 @@ class TrezorClientBase(HardwareClientBase, Logger):
 
     # ========= UI methods ==========
 
-    def button_request(self, code):
-        message = self.msg or MESSAGES.get(code) or MESSAGES['default']
+    def button_request(self, br):
+        message = self.msg or MESSAGES.get(br.code) or MESSAGES['default']
         self.handler.show_message(message.format(self.device), self.client.cancel)
 
     def get_pin(self, code=None):
@@ -300,7 +303,7 @@ class TrezorClientBase(HardwareClientBase, Logger):
             msg = _("Enter a passphrase to generate this wallet.  Each time "
                     "you use this wallet your {} will prompt you for the "
                     "passphrase.  If you forget the passphrase you cannot "
-                    "access the RUNESs in the wallet.").format(self.device)
+                    "access the RUNES in the wallet.").format(self.device)
         else:
             msg = _("Enter the passphrase to unlock this wallet:")
 

@@ -45,7 +45,7 @@ from typing import TYPE_CHECKING, List, Optional, Tuple, Union, NamedTuple, Sequ
 from abc import ABC, abstractmethod
 import itertools
 
-from aiorpcx import TaskGroup
+from aiorpcx import TaskGroup, ignore_after
 
 from .i18n import _
 from .bip32 import BIP32Node, convert_bip32_intpath_to_strpath, convert_bip32_path_to_list_of_uint32
@@ -334,17 +334,19 @@ class Abstract_Wallet(AddressSynchronizer, ABC):
         ln_xprv = node.to_xprv()
         self.db.put('lightning_privkey2', ln_xprv)
 
-    def stop(self):
-        super().stop()
-        if any([ks.is_requesting_to_be_rewritten_to_wallet_file for ks in self.get_keystores()]):
-            self.save_keystore()
-        if self.network:
-            if self.lnworker:
-                self.lnworker.stop()
-                self.lnworker = None
-            self.lnbackups.stop()
-            self.lnbackups = None
-        self.save_db()
+    async def stop(self):
+        """Stop all networking and save DB to disk."""
+        try:
+            async with ignore_after(5):
+                await super().stop()
+                if self.network:
+                    if self.lnworker:
+                        await self.lnworker.stop()
+                        self.lnworker = None
+        finally:  # even if we get cancelled
+            if any([ks.is_requesting_to_be_rewritten_to_wallet_file for ks in self.get_keystores()]):
+                self.save_keystore()
+            self.save_db()
 
     def set_up_to_date(self, b):
         super().set_up_to_date(b)
@@ -2116,7 +2118,9 @@ class Abstract_Wallet(AddressSynchronizer, ABC):
             _logger.info("return None when sign_message on a watch-only wallet")
             return None
         index = self.get_address_index(address)
-        return self.keystore.sign_message(index, message, password)
+        script_type = self.get_txin_type(address)
+        assert script_type != "address"
+        return self.keystore.sign_message(index, message, password, script_type=script_type)
 
     def decrypt_message(self, pubkey: str, message, password) -> bytes:
         addr = self.pubkeys_to_address([pubkey])

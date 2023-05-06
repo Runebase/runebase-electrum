@@ -106,6 +106,7 @@ from .token_dialog import TokenAddDialog, TokenInfoDialog, TokenSendDialog
 from .smart_contract_dialog import ContractCreateDialog, ContractEditDialog, ContractFuncDialog
 from .delegation_dialog import DelegationDialog
 from electrum.coinchooser import SenderNoUTXOException
+from .qrreader import scan_qrcode
 
 if TYPE_CHECKING:
     from . import ElectrumGui
@@ -203,6 +204,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         self.pending_invoice = None
         Logger.__init__(self)
 
+        self._coroutines_scheduled = {}  # type: Dict[concurrent.futures.Future, str]
         self.tx_notification_queue = queue.Queue()
         self.tx_notification_last_time = 0
 
@@ -327,17 +329,26 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         Exception_Hook.maybe_setup(config=self.config,
                                    wallet=self.wallet)
 
-    def run_coroutine_from_thread(self, coro, on_result=None):
-        def task():
+    def run_coroutine_from_thread(self, coro, name, on_result=None):
+        if self._cleaned_up:
+            self.logger.warning(f"stopping or already stopped but run_coroutine_from_thread was called.")
+            return
+        async def wrapper():
             try:
-                f = asyncio.run_coroutine_threadsafe(coro, self.network.asyncio_loop)
-                r = f.result()
-                if on_result:
-                    on_result(r)
+                res = await coro
             except Exception as e:
                 self.logger.exception("exception in coro scheduled via window.wallet")
-                self.show_error_signal.emit(str(e))
-        self.wallet.thread.add(task)
+                self.show_error_signal.emit(repr(e))
+            else:
+                if on_result:
+                    on_result(res)
+            finally:
+                self._coroutines_scheduled.pop(fut)
+                self.need_update.set()
+
+        fut = asyncio.run_coroutine_threadsafe(wrapper(), self.network.asyncio_loop)
+        self._coroutines_scheduled[fut] = name
+        self.need_update.set()
 
     def on_fx_history(self):
         self.history_model.refresh('fx_history')
@@ -579,8 +590,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         if self.wallet.is_watching_only():
             msg = ' '.join([
                 _("This wallet is watching-only."),
-                _("This means you will not be able to spend RUNESs with it."),
-                _("Make sure you own the seed phrase or the private keys, before you request RUNESs to be sent to this wallet.")
+                _("This means you will not be able to spend RUNES with it."),
+                _("Make sure you own the seed phrase or the private keys, before you request RUNES to be sent to this wallet.")
             ])
             self.show_warning(msg, title=_('Watch-only wallet'))
 
@@ -1151,7 +1162,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
         self.receive_payreq_e = ButtonsTextEdit()
         self.receive_payreq_e.setFont(QFont(MONOSPACE_FONT))
-        self.receive_payreq_e.addCopyButton(self.app)
+        self.receive_payreq_e.addCopyButton()
         self.receive_payreq_e.setReadOnly(True)
         self.receive_payreq_e.textChanged.connect(self.update_receive_qr)
         self.receive_payreq_e.setFocusPolicy(Qt.ClickFocus)
@@ -1163,7 +1174,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
         self.receive_address_e = ButtonsTextEdit()
         self.receive_address_e.setFont(QFont(MONOSPACE_FONT))
-        self.receive_address_e.addCopyButton(self.app)
+        self.receive_address_e.addCopyButton()
         self.receive_address_e.setReadOnly(True)
         self.receive_address_e.textChanged.connect(self.update_receive_address_styling)
 
@@ -1366,7 +1377,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         from .paytoedit import PayToEdit
         self.amount_e = BTCAmountEdit(self.get_decimal_point)
         self.payto_e = PayToEdit(self)
-        self.payto_e.addPasteButton(self.app)
+        self.payto_e.addPasteButton()
         msg = _('Recipient of the funds.') + '\n\n'\
               + _('You may enter a Runebase address, a label from your list of contacts (a list of completions will be proposed), or an alias (email-like address that forwards to a Runebase address)')
         payto_label = HelpLabel(_('Pay to'), msg)
@@ -2186,7 +2197,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         grid.addWidget(QLabel(invoice.message), 2, 1)
         grid.addWidget(QLabel(_("Hash") + ':'), 3, 0)
         payhash_e = ButtonsLineEdit(lnaddr.paymenthash.hex())
-        payhash_e.addCopyButton(self.app)
+        payhash_e.addCopyButton()
         payhash_e.setReadOnly(True)
         vbox.addWidget(payhash_e)
         grid.addWidget(payhash_e, 3, 1)
@@ -2195,7 +2206,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             grid.addWidget(QLabel(format_time(invoice.time + invoice.exp)), 4, 1)
         vbox.addLayout(grid)
         invoice_e = ShowQRTextEdit(config=self.config)
-        invoice_e.addCopyButton(self.app)
+        invoice_e.addCopyButton()
         invoice_e.setText(invoice.invoice)
         vbox.addWidget(invoice_e)
         vbox.addLayout(Buttons(CloseButton(d),))
@@ -2478,7 +2489,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
 
                 mpk_text = ShowQRTextEdit(ks.get_master_public_key(), config=self.config)
                 mpk_text.setMaximumHeight(150)
-                mpk_text.addCopyButton(self.app)
+                mpk_text.addCopyButton()
                 run_hook('show_xpub_button', mpk_text, ks)
 
                 der_path_hbox = QHBoxLayout()
@@ -2573,7 +2584,7 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         vbox.addWidget(QLabel(_("Script type") + ': ' + xtype))
         vbox.addWidget(QLabel(_("Private key") + ':'))
         keys_e = ShowQRTextEdit(text=pk, config=self.config)
-        keys_e.addCopyButton(self.app)
+        keys_e.addCopyButton()
         vbox.addWidget(keys_e)
         vbox.addLayout(Buttons(CloseButton(d)))
         d.setLayout(vbox)
@@ -2810,26 +2821,27 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
             return
 
     def read_tx_from_qrcode(self):
-        from electrum import qrscanner
-        try:
-            data = qrscanner.scan_barcode(self.config.get_video_device())
-        except BaseException as e:
-            self.show_error(repr(e))
-            return
-        if not data:
-            return
-        # if the user scanned a bitcoin URI
-        if str(data).startswith("runebase:"):
-            self.pay_to_URI(data)
-            return
-        if data.startswith('channel_backup:'):
-            self.import_channel_backup(data)
-            return
-        # else if the user scanned an offline signed tx
-        tx = self.tx_from_text(data)
-        if not tx:
-            return
-        self.show_transaction(tx)
+        def cb(success: bool, error: str, data):
+            if not success:
+                if error:
+                    self.show_error(error)
+                return
+            if not data:
+                return
+            # if the user scanned a bitcoin URI
+            if data.lower().startswith('runebase:'):
+                self.pay_to_URI(data)
+                return
+            if data.lower().startswith('channel_backup:'):
+                self.import_channel_backup(data)
+                return
+            # else if the user scanned an offline signed tx
+            tx = self.tx_from_text(data)
+            if not tx:
+                return
+            self.show_transaction(tx)
+
+        scan_qrcode(parent=self.top_level_window(), config=self.config, callback=cb)
 
     def read_tx_from_file(self) -> Optional[Transaction]:
         fileName = getOpenFileName(
@@ -3177,6 +3189,8 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         if self.wallet.thread:
             self.wallet.thread.stop()
             self.wallet.thread = None
+        for fut in self._coroutines_scheduled.keys():
+            fut.cancel()
         util.unregister_callback(self.on_network)
         self.config.set_key("is_maximized", self.isMaximized())
         if not self.isMaximized():
@@ -3187,7 +3201,6 @@ class ElectrumWindow(QMainWindow, MessageBoxMixin, Logger):
         if self.qr_window:
             self.qr_window.close()
         self.close_wallet()
-
         if self._update_check_thread:
             self._update_check_thread.exit()
             self._update_check_thread.wait()

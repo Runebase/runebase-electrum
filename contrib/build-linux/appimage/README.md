@@ -13,9 +13,9 @@ Help to adapt these scripts to build for (some flavor of) ARM would be welcome,
 see [issue #5159](https://github.com/spesmilo/electrum/issues/5159).
 
 0. clone code without `--recursive`
-    
+
     ```
-    $ git clone https://github.com/runebase/runebase-electrum.git 
+    $ git clone https://github.com/runebase/runebase-electrum.git
     ```
 
 1. Install Docker
@@ -39,9 +39,9 @@ see [issue #5159](https://github.com/spesmilo/electrum/issues/5159).
     ```
     $ sudo docker run -it \
         --name runebase-electrum-appimage-builder-cont \
-        -v $PWD:/home/bago/runebase-electrum \
+        -v $PWD:/opt/electrum \
         --rm \
-        --workdir /home/bago/runebase-electrum/contrib/build-linux/appimage \
+        --workdir /opt/electrum/contrib/build-linux/appimage \
         runebase-electrum-appimage-builder-img \
         ./build.sh
     ```

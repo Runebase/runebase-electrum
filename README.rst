@@ -16,14 +16,28 @@ Runebase Electrum is a lightweight Runebase wallet forked from `Electrum <https:
 Getting started
 ===============
 
-Electrum is a pure python application. If you want to use the
-Qt interface, install the Qt dependencies::
+Electrum is a pure python application. If you want to use the Qt interface, install the Qt dependencies::
 
+    // linux
     sudo apt-get install python3-pyqt5
+
+    // macOS (thanks @puruoni)
+    brew install pyqt5
+    export PATH="/opt/homebrew/opt/qt@5/bin:$PATH"
+    export PATH="/opt/homebrew/opt/pyqt@5/5.15.4_1/bin:$PATH"
+    // *** In the case of pyenv ***
+    cd /opt/homebrew/Cellar/pyqt@5/5.15.7_1/lib/python3.10/site-packages
+    cp -pr * /Users/[username]/.pyenv/versions/3.10.8/lib/python3.10/site-packages/.
+
 
 For elliptic curve operations, `libsecp256k1`_ is a required dependency::
 
+    // linux
     sudo apt-get install libsecp256k1-0
+
+    // macOS
+    brew tap cuber/homebrew-libsecp256k1
+    brew install libsecp256k1
 
 Alternatively, when running from a cloned repository, a script is provided to build
 libsecp256k1 yourself::
@@ -45,34 +59,12 @@ If you would like hardware wallet support, see `this`_.
 .. _cryptography: https://github.com/pyca/cryptography
 .. _this: https://github.com/spesmilo/electrum-docs/blob/master/hardware-linux.rst
 
-
-Running from tar.gz
--------------------
-
-If you downloaded the official package (tar.gz), you can run
-Electrum from its root directory without installing it on your
-system; all the python dependencies are included in the 'packages'
-directory. To run Electrum from its root directory, just do::
-
-    ./run_electrum
-
-You can also install Electrum on your system, by running this command(runebase-electrum may hava a conflict with bitcoin electrum)::
-
-    sudo apt-get install python3-setuptools python3-pip
-    python3 -m pip install --user
-
-This will download and install the Python dependencies used by
-Electrum instead of using the 'packages' directory.
-It will also place an executable named :code:`electrum` in :code:`~/.local/bin`,
-so make sure that is on your :code:`PATH` variable.
-
-
 Development version (git clone)
 -------------------------------
 
 Check out the code from GitHub::
 
-    git clone https://github.com/runebase/runebase-electrum.git
+    git clone https://github.com/runebaseproject/runebase-electrum.git
     cd runebase-electrum
     git submodule update --init
 
@@ -81,6 +73,8 @@ Run install (this should install dependencies)::
     python3 -m pip install -r ./contrib/requirements/requirements-eth.txt
     python3 -m pip install --user -e .
 
+    // fix protobuf on M1 macOS
+    export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 
 Create translations (optional)::
 

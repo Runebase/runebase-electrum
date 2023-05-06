@@ -171,7 +171,7 @@ class OKEX(ExchangeBase):
 class Binance(ExchangeBase):
 
     async def get_rates(self, ccy):
-        json = await self.get_json('api.binance.com', '/api/v3/avgPrice?symbol=RUNES{}'.format(ccy.upper()))
+        json = await self.get_json('api.binance.com', '/api/v3/avgPrice?symbol=RUNEBASE{}'.format(ccy.upper()))
         return {ccy: Decimal(json['price'])}
 
 

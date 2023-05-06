@@ -45,7 +45,7 @@ except ImportError as e:
 
 if BTCHIP:
     try:
-        from btchip import RUNES_OPSENDER_SUPPORT
+        from btchip import RUNEBASE_OPSENDER_SUPPORT
     except ImportError:
         raise Exception("Please uninstall btchip-python and install btchip-runebase OR use a clean virtualenv")
 
@@ -306,7 +306,7 @@ class Ledger_KeyStore(Hardware_KeyStore):
     @runs_in_hwd_thread
     @test_pin_unlocked
     @set_and_unset_signing
-    def sign_message(self, sequence, message, password):
+    def sign_message(self, sequence, message, password, *, script_type=None):
         message = message.encode('utf8')
         message_hash = hashlib.sha256(message).hexdigest().upper()
         # prompt for the PIN before displaying the dialog if necessary
