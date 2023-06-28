@@ -47,7 +47,7 @@ if BTCHIP:
     try:
         from btchip import RUNEBASE_OPSENDER_SUPPORT
     except ImportError:
-        raise Exception("Please uninstall btchip-python and install btchip-runebase OR use a clean virtualenv")
+        raise Exception("Please uninstall btchip-python and install btchip-qtum OR use a clean virtualenv")
 
 MSG_NEEDS_FW_UPDATE_GENERIC = _('Firmware version too old. Please update at') + \
                       ' https://www.ledgerwallet.com'

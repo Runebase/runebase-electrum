@@ -4,7 +4,7 @@ set -e
 
 # Parameterize
 PYTHON_VERSION=3.9.11
-GIT_REPO=https://github.com/runebaseproject/runebase-electrum
+GIT_REPO=https://github.com/runebase/runebase-electrum
 BUILDDIR=/tmp/runebase-electrum-build
 PACKAGE="Runebase Electrum"
 VERSION=`git describe --tags --dirty --always`

@@ -64,7 +64,7 @@ Development version (git clone)
 
 Check out the code from GitHub::
 
-    git clone https://github.com/runebaseproject/runebase-electrum.git
+    git clone https://github.com/runebase/runebase-electrum.git
     cd runebase-electrum
     git submodule update --init
 
