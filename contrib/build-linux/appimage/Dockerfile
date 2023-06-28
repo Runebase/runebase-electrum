@@ -15,9 +15,9 @@ RUN apt-get update -q && \
         autoconf=2.69-9 \
         libtool=2.4.6-0.1 \
         xz-utils=5.1.1alpha+20120614-2ubuntu2 \
-        libssl-dev=1.0.2g-1ubuntu4.19 \
-        libssl1.0.0=1.0.2g-1ubuntu4.19 \
-        openssl=1.0.2g-1ubuntu4.19 \
+        libssl-dev=1.0.2g-1ubuntu4.20 \
+        libssl1.0.0=1.0.2g-1ubuntu4.20 \
+        openssl=1.0.2g-1ubuntu4.20 \
         zlib1g-dev=1:1.2.8.dfsg-2ubuntu4.3 \
         libffi-dev=3.2.1-4 \
         libncurses5-dev=6.0+20160213-1ubuntu1 \
@@ -43,7 +43,7 @@ RUN apt-get update -q && \
         libxcb-util1=0.4.0-0ubuntu3 \
         libxcb-render-util0=0.3.9-1 \
         libx11-xcb1=2:1.6.3-1ubuntu2.2 \
-        libc6-dev=2.23-0ubuntu11.2 \
+        libc6-dev=2.23-0ubuntu11.3 \
         && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove -y && \
