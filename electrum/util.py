@@ -836,7 +836,7 @@ mainnet_block_explorers = {
 }
 
 testnet_block_explorers = {
-    'testnet.runebase.io': ('https://testnet.runebase.io/',
+    'testnet-explorer.runebase.io': ('https://testnet-explorer.runebase.io/',
                   {'tx': 'tx/', 'addr': 'address/', 'contract': 'contract/'}),
 }
 
@@ -862,7 +862,7 @@ def block_explorer_URL(config: 'SimpleConfig', **params) -> Optional[str]:
     addr = params.get('addr')
 
     if token:
-        if 'runebase.org' in be_tuple[0]:
+        if 'runebase.io' in be_tuple[0]:
             return "{}/token/{}?a={}".format(be_tuple[0], token, addr)
         if 'explorer.runebase.io' in be_tuple[0]:
             return "{}address/{}/token-balance?token={}".format(be_tuple[0], addr, token)

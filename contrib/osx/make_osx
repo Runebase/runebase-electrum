@@ -3,7 +3,7 @@
 set -e
 
 # Parameterize
-PYTHON_VERSION=3.9.11
+PYTHON_VERSION=3.11.6
 GIT_REPO=https://github.com/runebase/runebase-electrum
 BUILDDIR=/tmp/runebase-electrum-build
 PACKAGE="Runebase Electrum"
@@ -66,15 +66,15 @@ function DoCodeSignMaybe { # ARGS: infoName fileOrDirName
 }
 
 
-info "Installing Python $PYTHON_VERSION"
-PKG_FILE="python-${PYTHON_VERSION}-macosx10.9.pkg"
-if [ ! -f "$CACHEDIR/$PKG_FILE" ]; then
-    curl -o "$CACHEDIR/$PKG_FILE" "https://www.python.org/ftp/python/${PYTHON_VERSION}/$PKG_FILE"
-fi
-echo "c2073d44c404c661dadbf0cbda55c6e7d681baba9178ed1bdb126d34caa898a9  $CACHEDIR/$PKG_FILE" | shasum -a 256 -c \
-     || fail "python pkg checksum mismatched"
-sudo installer -pkg "$CACHEDIR/$PKG_FILE" -target / \
-    || fail "failed to install python"
+#info "Installing Python $PYTHON_VERSION"
+#PKG_FILE="python-${PYTHON_VERSION}-macos11.pkg"
+#if [ ! -f "$CACHEDIR/$PKG_FILE" ]; then
+#    curl -o "$CACHEDIR/$PKG_FILE" "https://www.python.org/ftp/python/${PYTHON_VERSION}/$PKG_FILE"
+#fi
+#echo "767ed35ad688d28ea4494081ae96408a0318d0d5bb9ca0139d74d6247b231cfc  $CACHEDIR/$PKG_FILE" | shasum -a 256 -c \
+#    || fail "python pkg checksum mismatched"
+#sudo installer -pkg "$CACHEDIR/$PKG_FILE" -target / \
+#    || fail "failed to install python"
 
 # sanity check "python3" has the version we just installed.
 FOUND_PY_VERSION=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:3])))')
@@ -86,26 +86,24 @@ break_legacy_easy_install
 
 # create a fresh virtualenv
 # This helps to avoid older versions of pip-installed dependencies interfering with the build.
-VENV_DIR="$CONTRIB_OSX/build-venv"
-rm -rf "$VENV_DIR"
-python3 -m venv $VENV_DIR
-source $VENV_DIR/bin/activate
+#VENV_DIR="$CONTRIB_OSX/build-venv"
+#rm -rf "$VENV_DIR"
+#python3 -m venv $VENV_DIR
+#source $VENV_DIR/bin/activate
 
 info "Installing build dependencies"
 python3 -m pip install --no-build-isolation --no-dependencies --no-warn-script-location \
     -Ir ./contrib/deterministic-build/requirements-build-base.txt \
     || fail "Could not install build dependencies (base)"
-python3 -m pip install --no-build-isolation --no-dependencies --no-warn-script-location \
+python3 -m pip install --no-build-isolation --no-dependencies --no-binary :all: --no-warn-script-location \
     -Ir ./contrib/deterministic-build/requirements-build-mac.txt \
     || fail "Could not install build dependencies (mac)"
 
 info "Building PyInstaller."
+# rm -rf "$CACHEDIR/pyinstaller"
 PYINSTALLER_REPO="https://github.com/pyinstaller/pyinstaller.git"
-PYINSTALLER_COMMIT="40c9abce2d8de879e414fd377c933dccaab1e156"
-# ^ tag "4.2"
-# TODO test newer versions of pyinstaller for build-reproducibility.
-#      we are using this version for now due to change in code-signing behaviour
-#      (https://github.com/pyinstaller/pyinstaller/pull/5581)
+PYINSTALLER_COMMIT="d1b6b520a017578a19e1cb9514752a4517755ee0"
+# ^ tag "v5.13.2"
 (
     if [ -f "$CACHEDIR/pyinstaller/PyInstaller/bootloader/Darwin-64bit/runw" ]; then
         info "pyinstaller already built, skipping"
@@ -132,7 +130,6 @@ PYINSTALLER_COMMIT="40c9abce2d8de879e414fd377c933dccaab1e156"
     popd
     # sanity check bootloader is there:
     [[ -e "PyInstaller/bootloader/Darwin-64bit/runw" ]] || fail "Could not find runw in target dir!"
-    rm pyinstaller.py  # workaround for https://github.com/pyinstaller/pyinstaller/pull/6701
 ) || fail "PyInstaller build failed"
 info "Installing PyInstaller."
 python3 -m pip install --no-build-isolation --no-dependencies --no-warn-script-location "$CACHEDIR/pyinstaller"
@@ -161,13 +158,13 @@ info "generating locale"
 ) || fail "failed generating locale"
 
 
-if [ ! -f "$PROJECT_ROOT"/electrum/libsecp256k1.0.dylib ]; then
+if [ ! -f "$PROJECT_ROOT"/electrum/libsecp256k1.2.dylib ]; then
     info "Building libsecp256k1 dylib..."
     "$CONTRIB"/make_libsecp256k1.sh || fail "Could not build libsecp"
 else
     info "Skipping libsecp256k1 build: reusing already built dylib."
 fi
-cp "$PROJECT_ROOT"/electrum/libsecp256k1.0.dylib "$CONTRIB"/osx
+cp "$PROJECT_ROOT"/electrum/libsecp256k1.*.dylib "$CONTRIB"/osx
 
 
 if [ ! -f "$PROJECT_ROOT"/electrum/libzbar.0.dylib ]; then
@@ -188,12 +185,8 @@ fi
 cp "$PROJECT_ROOT"/electrum/libusb-1.0.dylib "$CONTRIB"/osx
 
 
-info "Preparing for building libsecp256k1"
-"$CONTRIB"/make_libsecp256k1.sh || fail "Could not build libsecp"
-cp "$PROJECT_ROOT"/electrum/libsecp256k1.0.dylib contrib/osx
-
 info "Installing requirements..."
-python3 -m pip install --no-build-isolation --no-dependencies --no-warn-script-location -Ir ./contrib/deterministic-build/requirements.txt \
+python3 -m pip install --no-build-isolation --no-dependencies --no-binary :all: --no-warn-script-location -Ir ./contrib/deterministic-build/requirements.txt \
     || fail "Could not install requirements"
 
 info "Installing hardware wallet requirements..."
@@ -214,15 +207,11 @@ python3 -m pip install --no-build-isolation --no-dependencies --no-warn-script-l
 info "Faking timestamps..."
 find . -exec touch -t '200101220000' {} + || true
 
+VERSION=$(git describe --tags --dirty --always)
+info "Version: $VERSION"
 
 info "Building binary"
-pyinstaller --noconfirm --ascii --clean --name $VERSION contrib/osx/osx.spec || fail "Could not build binary"
-
-info "Adding runebase URI types to Info.plist"
-plutil -insert 'CFBundleURLTypes' \
-	-xml '<array><dict> <key>CFBundleURLName</key> <string>runebase</string> <key>CFBundleURLSchemes</key> <array><string>runebase</string></array> </dict></array>' \
-	-- "./dist/${PACKAGE}.app/Contents/Info.plist" \
-	|| fail "Could not add keys to Info.plist. Make sure the program 'plutil' exists and is installed."
+ELECTRUM_VERSION=$VERSION pyinstaller --noconfirm --ascii --clean contrib/osx/osx.spec || fail "Could not build binary"
 
 #DoCodeSignMaybe "app bundle" "${DIST_DIR}/${PACKAGE}.app" "$APP_SIGN" # If APP_SIGN is empty will be a noop
 
@@ -236,7 +225,6 @@ hdiutil detach "/Volumes/${PACKAGE}"
 sleep 2
 
 hdiutil convert ${TEMP_DMG_NAME} -format UDZO -o ${DMG_NAME}
-hdiutil internet-enable -yes ${DMG_NAME}
 rm -rf ${TEMP_DMG_NAME}
 
 openssl dgst -sha256 ${DMG_NAME}

@@ -9,12 +9,8 @@ PYPKG='electrum'
 MAIN_SCRIPT='run_electrum'
 ICONS_FILE=PYPKG + '/gui/icons/electrum.icns'
 
-
-for i, x in enumerate(sys.argv):
-    if x == '--name':
-        VERSION = sys.argv[i+1]
-        break
-else:
+VERSION = os.environ.get("ELECTRUM_VERSION")
+if not VERSION:
     raise Exception('no version')
 
 electrum = os.path.abspath(".") + "/"
@@ -25,7 +21,8 @@ hiddenimports = []
 hiddenimports += collect_submodules('pkg_resources')  # workaround for https://github.com/pypa/setuptools/issues/1963
 hiddenimports += collect_submodules('trezorlib')
 hiddenimports += collect_submodules('safetlib')
-hiddenimports += collect_submodules('btchip')
+hiddenimports += collect_submodules('btchip')       # device plugin: ledger
+hiddenimports += collect_submodules('ledger_runebase')  # device plugin: ledger
 hiddenimports += collect_submodules('keepkeylib')
 hiddenimports += collect_submodules('websocket')
 hiddenimports += collect_submodules('ckcc')
@@ -49,7 +46,7 @@ datas += collect_data_files('bitbox02')
 
 # Add libusb so Trezor and Safe-T mini will work
 binaries = [(electrum + "contrib/osx/libusb-1.0.dylib", ".")]
-binaries += [(electrum + "contrib/osx/libsecp256k1.0.dylib", ".")]
+binaries += [(electrum + "contrib/osx/libsecp256k1.2.dylib", ".")]
 binaries += [(electrum + "contrib/osx/libzbar.0.dylib", ".")]
 
 # Workaround for "Retro Look":
@@ -120,6 +117,13 @@ app = BUNDLE(
     bundle_identifier=None,
     info_plist={
         'NSHighResolutionCapable': 'True',
-        'NSSupportsAutomaticGraphicsSwitching': 'True'
+        'NSSupportsAutomaticGraphicsSwitching': 'True',
+        'CFBundleURLTypes':
+            [{
+                'CFBundleURLName': 'runebase',
+                'CFBundleURLSchemes': ['runebase', ],
+            }],
+        'LSMinimumSystemVersion': '12.0.0',
+        'NSCameraUsageDescription': 'Runebase Electrum would like to access the camera to scan for QR codes',
     },
 )
