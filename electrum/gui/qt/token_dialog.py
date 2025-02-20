@@ -219,7 +219,7 @@ class TokenSendLayout(QGridLayout):
         self.gas_limit_e.setText('75000')
         gas_price_lb = QLabel(_('gas price: '))
         self.gas_price_e = AmountEdit(lambda: '', False, None, 8, 0)
-        self.gas_price_e.setText('0.00000040')
+        self.gas_price_e.setText('0.00004000')
         optional_layout.addWidget(gas_limit_lb)
         optional_layout.addWidget(self.gas_limit_e)
         optional_layout.addStretch(1)
