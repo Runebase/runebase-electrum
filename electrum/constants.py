@@ -47,6 +47,12 @@ BIP39_WALLET_FORMATS = read_json('bip39_wallet_formats.json', [])
 
 class AbstractNet:
 
+    NET_NAME: str
+    TESTNET: bool
+    WIF_PREFIX: int
+    ADDRTYPE_P2PKH: int
+    ADDRTYPE_P2SH: int
+    SEGWIT_HRP: str
     BLOCK_HEIGHT_FIRST_LIGHTNING_CHANNELS = 0
     CHECKPOINTS = {}
     GENESIS = ""
@@ -68,6 +74,7 @@ class AbstractNet:
 
 class RunebaseMainnet(AbstractNet):
 
+    NET_NAME = "mainnet"
     TESTNET = False
     WIF_PREFIX = 0xd8
     BITCOIN_ADDRTYPE_P2PKH = 0
@@ -92,8 +99,8 @@ class RunebaseMainnet(AbstractNet):
 
     QIP5_FORK_HEIGHT = 0
     QIP9_FORK_HEIGHT = 0
-    OFFLINE_STAKE_HEIGHT = 900000 #upcoming fork
-    REDUCE_BLOCK_TIME_HEIGHT = 999999999 # upcoming fork
+    OFFLINE_STAKE_HEIGHT = 900000
+    REDUCE_BLOCK_TIME_HEIGHT = 1310000
 
     LN_REALM_BYTE = 0
     LN_DNS_SEEDS = []
@@ -124,13 +131,14 @@ class RunebaseMainnet(AbstractNet):
 
 class RunebaseTestnet(AbstractNet):
 
+    NET_NAME = "testnet"
     TESTNET = True
     WIF_PREFIX = 0xca
     BITCOIN_ADDRTYPE_P2PKH = 111
     BITCOIN_ADDRTYPE_P2SH = 196
     ADDRTYPE_P2PKH = 106
     ADDRTYPE_P2SH = 229
-    SEGWIT_HRP = "rcrt"
+    SEGWIT_HRP = "tr"
     GENESIS = "0000019d9d91d1c7fd440938747eed3ca13a2d2c0533054115f147ab0da69d46"
     GENESIS_BITS = 0x1f00ffff
     DEFAULT_PORTS = {'t': '51001', 's': '51002'}
@@ -149,8 +157,8 @@ class RunebaseTestnet(AbstractNet):
 
     QIP5_FORK_HEIGHT = 0
     QIP9_FORK_HEIGHT = 0
-    OFFLINE_STAKE_HEIGHT = 10000 # upcoming fork
-    REDUCE_BLOCK_TIME_HEIGHT = 999999999999999 # upcoming fork
+    OFFLINE_STAKE_HEIGHT = 5100
+    REDUCE_BLOCK_TIME_HEIGHT = 5200
 
     LN_REALM_BYTE = 0
     LN_DNS_SEEDS = []

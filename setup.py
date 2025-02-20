@@ -25,7 +25,10 @@ with open('contrib/requirements/requirements.txt') as f:
 requirements += ['eth-hash', 'eth-utils', 'eth-abi']
 
 with open('contrib/requirements/requirements-hw.txt') as f:
-    requirements_hw = f.read().splitlines()
+    text = f.read()
+    text = text.replace("https://github.com/runebase/btchip-python/archive/master.zip", "btchip")
+    text = text.replace("https://github.com/runebase/ledger-runebase-py/archive/master.zip", "ledger-runebase")
+    requirements_hw = text.splitlines()
 
 # load version.py; needlessly complicated alternative to "imp.load_source":
 version_spec = importlib.util.spec_from_file_location('version', 'electrum/version.py')
@@ -92,8 +95,8 @@ setup(
     scripts=['electrum/electrum'],
     data_files=data_files,
     description="Lightweight Runebase Wallet",
-    author="CodeFace",
-    author_email="codeface@qtum.info",
+    author="Bago",
+    author_email="support@runebase.io",
     license="MIT Licence",
     url="https://runebase.io",
     long_description="""Lightweight Runebase Wallet""",

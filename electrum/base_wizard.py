@@ -330,8 +330,8 @@ class BaseWizard(Logger):
                 # see if plugin recognizes 'scanned_devices'
                 try:
                     # FIXME: side-effect: unpaired_device_info sets client.handler
-                    device_infos = devmgr.unpaired_device_infos(None, plugin, devices=scanned_devices,
-                                                                include_failing_clients=True)
+                    device_infos = devmgr.list_pairable_device_infos(handler=None, plugin=plugin,
+                                                                     devices=scanned_devices, include_failing_clients=True)
                 except HardwarePluginLibraryUnavailable as e:
                     failed_getting_device_infos(name, e)
                     continue
@@ -662,7 +662,7 @@ class BaseWizard(Logger):
                 password = k.get_password_for_storage_encryption()
             except UserCancelled:
                 devmgr = self.plugins.device_manager
-                devmgr.unpair_xpub(k.xpub)
+                devmgr.unpair_pairing_code(k.pairing_code())
                 raise ChooseHwDeviceAgain()
             except BaseException as e:
                 self.logger.exception('')
