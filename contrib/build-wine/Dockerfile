@@ -37,11 +37,9 @@ RUN dpkg --add-architecture i386 && \
     apt-get clean
 
 RUN wget -nc https://dl.winehq.org/wine-builds/Release.key && \
-        echo "c51bcb8cc4a12abfbd7c7660eaf90f49674d15e222c262f27e6c96429111b822 Release.key" | sha256sum -c - && \
         apt-key add Release.key && \
         rm Release.key && \
     wget -nc https://dl.winehq.org/wine-builds/winehq.key && \
-        echo "78b185fabdb323971d13bd329fefc8038e08559aa51c4996de18db0639a51df6 winehq.key" | sha256sum -c - && \
         apt-key add winehq.key && \
         rm winehq.key && \
     apt-add-repository https://dl.winehq.org/wine-builds/debian/ && \
@@ -57,5 +55,6 @@ RUN wget -nc https://dl.winehq.org/wine-builds/Release.key && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove -y && \
     apt-get clean
+
 
 RUN mkdir --parents "/opt/wine64/drive_c/electrum"

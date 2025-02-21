@@ -265,6 +265,6 @@ wheel==0.38.4 \
     --hash=sha256:965f5259b566725405b05e7cf774052044b1ed30119b5d586b2703aafe8719ac \
     --hash=sha256:b60533f3f5d530e971d6737ca6d58681ee434818fab630c83a734bb10c083ce8
 https://github.com/runebase/btchip-python/archive/master.zip \
-    --hash=sha256:6d8a3ebfa6928687bee741c2aacfb9a297ebd6f02e8220d5b9fdf730e0699204
+    --hash=sha256:cf82833274d7f2b5cffb84a6d8f0a2899e9e162460896d398142b283518aad22
 https://github.com/runebase/ledger-runebase-py/archive/main.zip \
-    --hash=sha256:79580f3cc24cd73eabe9690e2fba4cd399c4a439eaf28fba85d104f2ed2722f8
+    --hash=sha256:b92c90a54960c38cbe6d143273e9e4d63890a0c0c75ed7bc4c1d2b0ae7a08524
