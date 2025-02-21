@@ -9,7 +9,7 @@ PYTHON_VERSION=3.11.6
 # Let's begin!
 set -e
 
-here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+here="$(dirname "$(readlink -e "$0")")"
 
 . "$CONTRIB"/build_tools_util.sh
 

@@ -6,7 +6,7 @@
 
 set -e
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+PROJECT_ROOT="$(dirname "$(readlink -e "$0")")/../.."
 PROJECT_ROOT_OR_FRESHCLONE_ROOT="$PROJECT_ROOT"
 CONTRIB="$PROJECT_ROOT/contrib"
 CONTRIB_WINE="$CONTRIB/build-wine"
