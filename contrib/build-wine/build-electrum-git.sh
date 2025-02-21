@@ -18,6 +18,11 @@ set -e
 
 here="$(dirname "$(readlink -e "$0")")"
 
+echo "here=$here"
+echo "CONTRIB=$CONTRIB"
+echo "CACHEDIR=$CACHEDIR"
+echo "WINEPREFIX=$WINEPREFIX"
+
 . "$CONTRIB"/build_tools_util.sh
 
 pushd $WINEPREFIX/drive_c/electrum
