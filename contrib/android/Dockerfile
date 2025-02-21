@@ -165,14 +165,12 @@ RUN cd /opt \
     && python3 -m pip install --user -e .
 
 # install python-for-android
+ENV P4A_CHECKOUT_COMMIT="0ab0d872e6c6b88ddc05b9c4ba6fcd3aa7921242"
 RUN cd /opt \
-    && git clone https://github.com/kivy/python-for-android \
+    && git clone https://github.com/spesmilo/python-for-android \
     && cd python-for-android \
-    && git remote add sombernight https://github.com/SomberNight/python-for-android \
-    && git fetch --all \
-    # commit: from branch sombernight/electrum_20200703
-    && git checkout "0dd2ce87a8f380d20505ca5dc1e2d2357b4a08fc^{commit}" \
-    && python3 -m pip install --user -e .
+    && git checkout "${P4A_CHECKOUT_COMMIT}^{commit}" \
+    && /opt/venv/bin/python3 -m pip install --no-build-isolation --no-dependencies -e .
 
 # build env vars
 ENV USE_SDK_WRAPPER=1

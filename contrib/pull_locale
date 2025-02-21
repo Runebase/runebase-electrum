@@ -35,9 +35,14 @@ crowdin_identifier = 'electrum'
 crowdin_file_name = 'files[electrum-client/messages.pot]'
 locale_file_name = 'locale/messages.pot'
 
-# Download & unzip
+# Download & unzip 
+
+# temp fix while download requires login (paste cookie string from header you find in the browser after creating account with crowdin)
+headers = {
+    "Cookie": "your_copied_cookie_string_here"
+}
 print('Download translations')
-s = requests.request('GET', 'https://crowdin.com/backend/download/project/' + crowdin_identifier + '.zip').content
+s = requests.get("https://crowdin.com/backend/download/project/" + crowdin_identifier + ".zip", headers=headers).content
 zfobj = zipfile.ZipFile(io.BytesIO(s))
 
 print('Unzip translations')
